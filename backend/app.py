@@ -1,10 +1,3 @@
-"""FastAPI app for PaperSummary (MVP)
-
-This file is a clean runnable FastAPI app. It mirrors the intended behavior of
-`backend_main.py` but is created as `backend.app` so we can start the server
-without editing the existing malformed file.
-"""
-
 import tempfile
 from pathlib import Path
 from typing import Optional
