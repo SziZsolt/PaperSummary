@@ -14,7 +14,13 @@
       <input ref="fileInput" type="file" accept="application/pdf" @change="onFileChange" required />
     </label>
 
-    <button type="submit" :disabled="loading">Upload & Summarize</button>
+    <button type="submit" :disabled="loading">
+      <template v-if="loading">
+        <span class="spinner" aria-hidden="true"></span>
+        <span style="margin-left:8px">Processing…</span>
+      </template>
+      <template v-else>Upload &amp; Summarize</template>
+    </button>
   </form>
 </template>
 

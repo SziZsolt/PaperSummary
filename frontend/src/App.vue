@@ -5,7 +5,10 @@
 
     <section class="result" v-if="summary || loading || error">
       <h2>Summary</h2>
-      <div v-if="loading">Loading…</div>
+      <div v-if="loading" class="loading-block">
+        <div class="spinner spinner-large" role="status" aria-label="Loading"></div>
+        <div class="spinner-label">Loading summary…</div>
+      </div>
       <div v-if="error" class="error">{{ error }}</div>
       <pre v-if="summary">{{ summary }}</pre>
     </section>
