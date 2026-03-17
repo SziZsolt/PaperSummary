@@ -4,11 +4,17 @@ from typing import Optional
 
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import os
 from typing import Union
 from pypdf import PdfReader
 
 app = FastAPI(title="PaperSummary Backend")
+
+domains = [
+        {"id": "computer-science", "label": "Computer Science"},
+        {"id": "machine-learning", "label": "Machine Learning"},
+    ]
 
 def generate_summary(content: str, domain: str) -> str:
     """Simple dummy summarizer for the MVP.
@@ -16,6 +22,7 @@ def generate_summary(content: str, domain: str) -> str:
     Replace this with real model inference later.
     """
     return f"Dummy summary for domain '{domain}'. Received content length: {len(content)}"
+
 
 def process_pdf(path: Union[str, Path]) -> str:
     """Extract text from a PDF file at `path` and return it as a string.
@@ -59,20 +66,30 @@ def root():
     return {"status": "ok", "message": "PaperSummary backend is running"}
 
 
+@app.get("/domains")
+def list_domains():
+    """Return available domains (id + human label)."""
+    return domains
+
+
 @app.post("/summarize")
-async def summarize(file: UploadFile = File(...), domain: str = Form(...)):
+async def summarize(file: UploadFile = File(...), domain_id: str = Form(...)):
     """Accept a domain string and a PDF file (both required). Returns a dummy summary.
 
     Form data (multipart/form-data):
     - domain: str (required)
     - file: UploadFile (required) - expected to be a PDF
     """
-
+    if domain_id not in {d["id"] for d in domains}:
+        return JSONResponse(
+            {"error": f"Invalid domain_id '{domain_id}'. Must be one of {[d['id'] for d in domains]}"},
+            status_code=400,
+        )
     original_filename: str = file.filename
     suffix = Path(file.filename).suffix or ".pdf"
     tmp_path = await save_upload_to_temp(file, suffix)
     text = process_pdf(tmp_path)
-    dummy_summary = generate_summary(content=text, domain=domain)
+    dummy_summary = generate_summary(content=text, domain=domain_id)
     try:
         os.unlink(tmp_path)
     except Exception:
@@ -80,7 +97,7 @@ async def summarize(file: UploadFile = File(...), domain: str = Form(...)):
 
     return JSONResponse(
         {
-            "domain": domain,
+            "domain": domain_id,
             "filename": original_filename,
             "summary": dummy_summary,
         }
