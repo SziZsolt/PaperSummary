@@ -77,7 +77,7 @@ async def summarize(file: UploadFile = File(...), domain_id: str = Form(...)):
     """Accept a domain string and a PDF file (both required). Returns a dummy summary.
 
     Form data (multipart/form-data):
-    - domain: str (required)
+    - domain_id: str (required, must be one of the IDs from /domains)
     - file: UploadFile (required) - expected to be a PDF
     """
     if domain_id not in {d["id"] for d in domains}:
