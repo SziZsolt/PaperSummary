@@ -2,10 +2,13 @@
   <form @submit.prevent="submit" class="uploader">
     <label>
       Domain:
-      <select v-model="domain" required>
+      <div v-if="domainsLoading" class="domain-loader">
+        <span class="spinner" aria-hidden="true"></span>
+        <span>Loading domains…</span>
+      </div>
+      <select v-else v-model="domain" required>
         <option disabled value="">-- select domain --</option>
-        <option value="machine-learning">Machine Learning</option>
-        <option value="computer-science">Computer Science</option>
+        <option v-for="d in domains" :key="d.id" :value="d.id">{{ d.label }}</option>
       </select>
     </label>
 
@@ -21,6 +24,8 @@
       </template>
       <template v-else>Upload &amp; Summarize</template>
     </button>
+
+    <div v-if="domainsError" class="error">Could not load domains: {{ domainsError }}</div>
   </form>
 </template>
 
@@ -32,7 +37,28 @@ export default {
       domain: '',
       file: null,
       loading: false,
+      domains: [],
+      domainsError: null,
+      domainsLoading: false,
     }
+  },
+  mounted() {
+    // Load domains via an async provider function. Currently the provider
+    // returns a mocked list (so the UI behaves like it's async without
+    // calling the backend). Later we can replace fetchDomains with a real
+    // fetch to the backend (/domains).
+    this.domainsLoading = true
+    this.fetchDomains()
+      .then((list) => {
+        this.domains = list
+        if (this.domains.length > 0) this.domain = this.domains[0].id
+      })
+      .catch((err) => {
+        this.domainsError = err.message || String(err)
+      })
+      .finally(() => {
+        this.domainsLoading = false
+      })
   },
   methods: {
     onFileChange(e) {
@@ -48,20 +74,12 @@ export default {
         const form = new FormData()
         form.append('domain', this.domain)
         form.append('file', this.file)
-        // TODO: Delete
+
+        // simulate network / processing delay with a mock response
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-        await delay(5000)
-        // TODO: Replace the following mock response with an actual API call to your backend
-        const resp = {
-            method: 'POST',
-            body: form,
-            ok: true,
-            json: async () => ({ summary: `Mock summary for domain "${this.domain}" and file "${this.file.name}"` }),
-        }
+        await delay(1500)
 
-        if (!resp.ok) throw new Error(`Server error: ${resp.statusText}`)
-
-        const data = await resp.json()
+        const data = { summary: `Mock summary for domain \"${this.domain}\" and file \"${this.file.name}\"` }
         const summary = data.summary || JSON.stringify(data, null, 2)
         this.$emit('summary', { loading: false, summary, error: null })
       } catch (err) {
@@ -69,6 +87,17 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    // Async provider for domains. Right now it returns a mocked list after
+    // a tiny delay to simulate network latency. Replace implementation to
+    // call the real backend endpoint when ready.
+    async fetchDomains() {
+      // Simulate a short network delay so the loading state is visible.
+      await new Promise((r) => setTimeout(r, 1500))
+      return [
+        { id: 'computer-science', label: 'Computer Science' },
+        { id: 'machine-learning', label: 'Machine Learning' },
+      ]
     },
   },
 }
@@ -97,4 +126,26 @@ button {
 }
 
 button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0,0,0,0.15);
+  border-top-color: rgba(0,0,0,0.6);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.domain-loader {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 6px;
+}
 </style>
