@@ -6,15 +6,9 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import JSONResponse
 import os
 from typing import Union
+from pypdf import PdfReader
 
-try:
-    # pypdf for PDF text extraction
-    from pypdf import PdfReader  # type: ignore
-except Exception:
-    PdfReader = None  # type: ignore
-
-app = FastAPI(title="PaperSummary Backend", version="0.1")
-
+app = FastAPI(title="PaperSummary Backend")
 
 def generate_summary(content: str, domain: str) -> str:
     """Simple dummy summarizer for the MVP.
@@ -30,21 +24,17 @@ def process_pdf(path: Union[str, Path]) -> str:
     with replacement characters if extraction fails.
     """
     try:
-        if PdfReader is not None:
-            reader = PdfReader(str(path))
-            texts = []
-            for page in reader.pages:
-                try:
-                    txt = page.extract_text() or ""
-                except Exception:
-                    txt = ""
-                texts.append(txt)
-            joined = "\n".join(texts).strip()
-            if joined:
-                return joined
-        with open(path, "rb") as fh:
-            data = fh.read()
-        return data.decode("utf-8", errors="replace")
+        reader = PdfReader(str(path))
+        texts = []
+        for page in reader.pages:
+            try:
+                txt = page.extract_text() or ""
+            except Exception:
+                txt = ""
+            texts.append(txt)
+        joined = "\n".join(texts).strip()
+        if joined:
+            return joined
     except Exception as e:
         return f"[unextractable PDF: {e}]"
 
