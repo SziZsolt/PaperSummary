@@ -38,6 +38,22 @@ def process_pdf(path: Union[str, Path]) -> str:
     except Exception as e:
         return f"[unextractable PDF: {e}]"
 
+
+async def save_upload_to_temp(upload_file: UploadFile, suffix: str) -> str:
+    """Save an UploadFile to a temporary file and return the path.
+
+    The function reads the upload asynchronously and writes to a NamedTemporaryFile
+    (delete=False so the caller can control when it's removed).
+    """
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+    try:
+        contents = await upload_file.read()
+        tmp.write(contents)
+        tmp.flush()
+        return tmp.name
+    finally:
+        tmp.close()
+
 @app.get("/")
 def root():
     return {"status": "ok", "message": "PaperSummary backend is running"}
@@ -54,19 +70,11 @@ async def summarize(file: UploadFile = File(...), domain: str = Form(...)):
 
     original_filename: str = file.filename
     suffix = Path(file.filename).suffix or ".pdf"
-
-    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
-    try:
-        contents = await file.read()
-        tmp.write(contents)
-        tmp.flush()
-    finally:
-        tmp.close()
-
-    text = process_pdf(tmp.name)
+    tmp_path = await save_upload_to_temp(file, suffix)
+    text = process_pdf(tmp_path)
     dummy_summary = generate_summary(content=text, domain=domain)
     try:
-        os.unlink(tmp.name)
+        os.unlink(tmp_path)
     except Exception:
         pass
 
