@@ -42,7 +42,9 @@ export default {
         const form = new FormData()
         form.append('domain', this.domain)
         form.append('file', this.file)
-
+        // TODO: Delete
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+        await delay(5000)
         // TODO: Replace the following mock response with an actual API call to your backend
         const resp = {
             method: 'POST',
