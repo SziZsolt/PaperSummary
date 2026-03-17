@@ -16,9 +16,3 @@ npm install
 ```bash
 npm run dev
 ```
-
-Open http://localhost:5173 in your browser.
-
-Notes
-- The frontend posts to `http://127.0.0.1:8000/summarize`. Make sure the backend is running there or update the URL in `PdfUploader.vue`.
-- If you hit CORS errors, enable CORS on the backend (FastAPI's `CORSMiddleware`) while developing.
