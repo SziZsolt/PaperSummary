@@ -1,24 +1,22 @@
 import pandas as pd
 from pathlib import Path
 
+def explore_dataframe(df, dataset_name):
+    print(f"\n{dataset_name}")
+    print(f"Shape: {df.shape}")
+    print(df.head())
+    df.info()
+    print(df.describe())
 
 current_dir = Path(__file__).resolve().parent
+ready_dir = current_dir / '../data/ready'
 
-file_path_robotics = current_dir / '../data/processed/Robotics_papers.csv'
-file_path_nlp = current_dir / '../data/processed/Computation_and_Language_(Natural_Language_Processing)_papers.csv'
+train_robotics = pd.read_csv(ready_dir / 'train_robotics.csv')
+test_robotics = pd.read_csv(ready_dir / 'test_robotics.csv')
+train_nlp = pd.read_csv(ready_dir / 'train_nlp.csv')
+test_nlp = pd.read_csv(ready_dir / 'test_nlp.csv')
 
-df_robotics = pd.read_csv(file_path_robotics)
-df_nlp = pd.read_csv(file_path_nlp)
-
-print("Robotics papers:")
-print(df_robotics.shape[0])
-print("\n")
-print(df_robotics.head())
-print("\n")
-print(df_robotics.describe())
-print("NLP papers:")
-print(df_nlp.shape[0])
-print("\n")
-print(df_nlp.head())
-print("\n")
-print(df_nlp.describe())
+explore_dataframe(train_robotics, "TRAIN - Robotics")
+explore_dataframe(test_robotics, "TEST - Robotics")
+explore_dataframe(train_nlp, "TRAIN - NLP")
+explore_dataframe(test_nlp, "TEST - NLP")

@@ -2,3 +2,4 @@ pandas
 requests
 PyMuPDF
 tqdm
+scikit-learn
