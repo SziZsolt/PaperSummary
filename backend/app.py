@@ -21,7 +21,7 @@ def generate_summary(content: str, domain: str) -> str:
 
     Replace this with real model inference later.
     """
-    return f"Dummy summary for domain '{domain}'. Received content length: {len(content)}"
+    return f"Dummy summary for domain '{domain}'. Received content length: {len(content)}. Content: {content}"
 
 
 def process_pdf(path: Union[str, Path]) -> str:
