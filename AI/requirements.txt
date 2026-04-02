@@ -1,0 +1,14 @@
+pandas
+requests
+PyMuPDF
+tqdm
+scikit-learn
+
+torch==2.4.1
+transformers==4.56.2
+peft==0.18.0
+accelerate==1.10.1
+bitsandbytes==0.47.0
+sentencepiece==0.2.1
+safetensors==0.6.2
+huggingface_hub==0.34.4

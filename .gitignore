@@ -1,6 +1,9 @@
 .DS_Store
 venv
+venv/
+.venv/
 __pycache__/
 *.py[cod]
 backend/__pycache__/app.cpython-313.pyc
 backend/__pycache__/backend_main.cpython-313.pyc
+.env
