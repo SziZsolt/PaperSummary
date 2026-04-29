@@ -12,8 +12,8 @@ from pypdf import PdfReader
 app = FastAPI(title="PaperSummary Backend")
 
 domains = [
-        {"id": "computer-science", "label": "Computer Science"},
-        {"id": "machine-learning", "label": "Machine Learning"},
+        {"id": "natural-language-processing", "label": "Natural Language Processing"},
+        {"id": "robotics", "label": "Robotics"},
     ]
 
 def generate_summary(content: str, domain: str) -> str:
