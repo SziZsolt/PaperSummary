@@ -12,7 +12,7 @@ from pypdf import PdfReader
 app = FastAPI(title="PaperSummary Backend")
 
 domains = [
-        {"id": "natural-language-processing", "label": "Natural Language Processing"},
+        {"id": "nlp", "label": "Natural Language Processing"},
         {"id": "robotics", "label": "Robotics"},
     ]
 
