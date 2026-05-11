@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
-// Using 127.0.0.1 is safer than localhost in Node.js to avoid IPv6 resolution issues
-const BACKEND_URL = "http://127.0.0.1:8000";
+const BACKEND_URL = "http://host.docker.internal:8000";
 
 export async function GET() {
   try {
