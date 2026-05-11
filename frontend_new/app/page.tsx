@@ -84,7 +84,7 @@ export default function Home() {
 
               {result.summary && !result.loading && (
                 <div className="prose prose-slate dark:prose-invert prose-sm sm:prose-base max-w-none">
-                  <div className="rounded-2xl bg-slate-50 dark:bg-slate-950 p-6 sm:p-8 text-slate-700 dark:text-slate-300 leading-relaxed border border-slate-100 dark:border-slate-800/60 whitespace-pre-wrap">
+                  <div className="rounded-2xl bg-slate-50 dark:bg-slate-950 p-6 sm:p-8 text-slate-700 dark:text-slate-300 leading-relaxed border border-slate-100 dark:border-slate-800/60">
                     {result.summary}
                   </div>
                 </div>
