@@ -1,3 +1,12 @@
+# Team
+
+- **Máté György Gulyás-Szabó** — Integration & Deployment  
+- **Zsolt Szigetközi** — Backend  
+- **Eltun Salmanli** — Frontend  
+- **Martin Mosonyi** — AI  
+- **Levente Barta** — AI  
+
+
 # Running PaperSummary
 
 After cloning the repository, run the following in two separate terminals:
